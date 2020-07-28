@@ -1,0 +1,46 @@
+@import "../../styles"
+
+.container 
+    background-color: $green
+    height: 100%
+    width: 100%
+    z-index: 0
+    @include mobile-only()
+        position: fixed
+        height: 660px
+    
+.slider-container
+    color: white
+    text-align: center
+    align-self: center
+    padding: 20px
+    img
+        max-width: 700px
+        width: 0
+        height: 0
+    
+    h1
+        font-size: $fz-large
+        text-align: center
+        margin: 30px 0 0 0
+    p
+        font-size: $fz-medium
+        text-align: center
+        margin: 20px auto 30px auto
+        max-width: 553px
+    .container-dot
+        display: inline-flex
+    .dot
+        cursor: pointer
+        background-color: white
+        height: 12px
+        width: 12px
+        border-radius: 100%
+        opacity: 0.5
+        margin: 6px
+        &.active
+            width: 26px
+            border-radius: 12px
+            opacity: 1
+    @include mobile-only()
+        margin: 22px
