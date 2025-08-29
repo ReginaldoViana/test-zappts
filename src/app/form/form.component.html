@@ -1,52 +1,103 @@
 <div class="container">
-    <h2>Invision</h2>
-
-    <form [formGroup]="formGroup">
-        
-        <h1>{{isSignUp ? 'Getting Started':'Welcome to Invision'}}</h1>
-
-        <div class="form-field" [ngClass]=" isSignUp ? '' : 'hidden' " [@switchPage]="isSignUp ? 'up': 'in'">
-            <label for="fullName">Full Name</label>
-            <input style="font: Regular 16px/20px Muli;" id="fullName" type="text" [formControl]="formGroup.controls['fullName']" class="{{ isValid(formGroup.controls['fullName']) ? 'error': ''}}">
-            {{isValid(formGroup.controls['fullName']) ? '*This field can not be empty ':''}}
+    <div class="form-container">
+        <div class="logo">
+            Invision
         </div>
         
-        <div class="form-field ">
-            <label for="userNameEmail">Users name or Email</label>
-            <input style="font: Regular 16px/20px Muli;" id="userNameEmail" type="text" [formControl]="formGroup.controls['userNameEmail']" class="{{isValid(formGroup.controls['userNameEmail']) ? 'error': ''}}">
-            {{isValid(formGroup.controls['userNameEmail']) ? '*This field can not be empty ':''}}
-        </div>
-        
-        <div class="form-field ">
-            <label for="password" *ngIf="!isSignUp">Password</label>
-            <label for="password" *ngIf="isSignUp">Create Password</label>
-            <input style="font: Regular 16px/20px Muli;" id="password" type="password" [formControl]="formGroup.controls['password']" class="{{isValid(formGroup.controls['password']) ? 'error': ''}}">
-            {{isValid(formGroup.controls['password']) ? '*This field can not be empty ':''}}
-        </div>
-
-        <div class="forgotPass" *ngIf="!isSignUp">Forgot password?</div>
-        
-        <div class="footer">
-
-            <button class="btn-accent">Sign {{isSignUp ? 'up':'in'}}</button>
-
-            <div class="divider-container">
-                <div class="divider"></div>
-                Or
-                <div class="divider"></div>
+        <form [formGroup]="formGroup" (ngSubmit)="onSubmit()">
+            <h1>{{isSignUp ? 'Getting Started' : 'Welcome to Invision'}}</h1>
+            
+            <div class="error-message" *ngIf="errorMessage">
+                {{errorMessage}}
             </div>
 
-            <button class="btn-social">
-                <div class="flex-btn">
-                    <img height="29px" width="29px" src="./assets/icon.png"><label class="textGoggle">Sign up with Google</label>
+            <div class="form-field" [ngClass]="{'show': isSignUp}" [@switchPage]="isSignUp ? 'up': 'in'">
+                <label for="fullName">Full Name</label>
+                <input 
+                    type="text" 
+                    id="fullName" 
+                    placeholder="Enter your full name" 
+                    [formControl]="formGroup.controls['fullName']" 
+                    [class.error]="isValid(formGroup.controls['fullName'])">
+                <div class="error-text" *ngIf="formGroup.controls['fullName'].errors?.['required'] && formGroup.controls['fullName'].touched">
+                    Full name is required
                 </div>
-            </button>
+                <div class="error-text" *ngIf="formGroup.controls['fullName'].errors?.['minlength'] && formGroup.controls['fullName'].touched">
+                    Full name must be at least 3 characters
+                </div>
+            </div>
 
-            <p>
-                By signing up, you agree to <b>Invision</b><br> <a> Terms of Conditions</a> and <a>Privacy Policy</a>
-            </p>
+            <div class="form-field">
+                <label for="userNameEmail">Email Address</label>
+                <input 
+                    type="email" 
+                    id="userNameEmail" 
+                    placeholder="Enter your email" 
+                    [formControl]="formGroup.controls['userNameEmail']"
+                    [class.error]="isValid(formGroup.controls['userNameEmail'])">
+                <div class="error-text" *ngIf="formGroup.controls['userNameEmail'].errors?.['required'] && formGroup.controls['userNameEmail'].touched">
+                    Email is required
+                </div>
+                <div class="error-text" *ngIf="formGroup.controls['userNameEmail'].errors?.['email'] && formGroup.controls['userNameEmail'].touched">
+                    Please enter a valid email address
+                </div>
+            </div>
 
-            <p> {{!isSignUp ? 'New':'Already on'}} <b> Invision? </b><a (click)="isSignUp = !isSignUp"> {{!isSignUp ? 'Create Account':'Log in'}}</a> </p>
-        </div>
-    </form>
+            <div class="form-field">
+                <label for="password">{{isSignUp ? 'Create Password' : 'Password'}}</label>
+                <input 
+                    [formControl]="formGroup.controls['password']"
+                    [class.error]="isValid(formGroup.controls['password'])"
+                    placeholder="{{isSignUp ? 'Create a password' : 'Enter your password'}}">
+                <div class="error-text" *ngIf="formGroup.controls['password'].errors?.['required'] && formGroup.controls['password'].touched">
+                    Password is required
+                </div>
+                <div class="error-text" *ngIf="formGroup.controls['password'].errors?.['minlength'] && formGroup.controls['password'].touched">
+                    Password must be at least 6 characters
+                </div>
+            </div>
+
+            <div class="forgot-password" *ngIf="!isSignUp">
+                <a href="#">Forgot password?</a>
+            </div>
+
+            <div class="footer">
+                <button 
+                    type="submit" 
+                    class="btn-accent" 
+                    [disabled]="formGroup.invalid || loading">
+                    <span *ngIf="!loading">Sign {{isSignUp ? 'up' : 'in'}}</span>
+                    <span *ngIf="loading">Loading...</span>
+                </button>
+
+                <div class="divider-container">
+                    <div class="divider"></div>
+                    <span>or</span>
+                    <div class="divider"></div>
+                </div>
+
+                <button 
+                    type="button" 
+                    class="btn-social" 
+                    (click)="onGoogleLogin()"
+                    [disabled]="loading">
+                    <div class="flex-btn">
+                        <img src="assets/icon.png" alt="Google Icon">
+                        <label>Sign {{isSignUp ? 'up' : 'in'}} with Google</label>
+                    </div>
+                </button>
+
+                <div class="terms" *ngIf="isSignUp">
+                    By signing up, you agree to <b>Invision</b>
+                    <a href="#"> Terms of Conditions</a> and
+                    <a href="#"> Privacy Policy</a>
+                </div>
+
+                <div class="switch-mode">
+                    <span>{{!isSignUp ? 'New' : 'Already on'}} <b>Invision?</b></span>
+                    <a (click)="isSignUp = !isSignUp">{{!isSignUp ? 'Create Account' : 'Log in'}}</a>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "admin@example.com",
+      "password": "admin123",
+      "fullName": "Admin User",
+      "createdAt": "2025-08-29"
+    },
+    {
+      "id": 2,
+      "email": "google@example.com",
+      "fullName": "Google User",
+      "googleId": "123456789",
+      "createdAt": "2025-08-29"
+    }
+  ]
+}

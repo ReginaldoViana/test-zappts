@@ -1,10 +1,13 @@
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { Component, OnInit } from '@angular/core';
+import { NgFor } from '@angular/common';
 
 @Component({
   selector: 'app-sliders',
   templateUrl: './sliders.component.html',
   styleUrls: ['./sliders.component.sass'],
+  standalone: true,
+  imports: [NgFor],
   animations: [
     trigger('sliderInOut', [
       state('in', style({ transform: 'translateX(-0)', maxWidth: '700px', width: '100%', height: 'auto' })),
