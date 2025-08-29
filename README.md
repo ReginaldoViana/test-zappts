@@ -1,4 +1,4 @@
-# Zappts Test Project
+# Zappts Test Project - Tela de Login
 
 Este é um projeto Angular desenvolvido com Angular CLI versão 9, demonstrando boas práticas de desenvolvimento e organização de código.
 
